@@ -13,6 +13,7 @@ import com.example.spring_homework4.service.DefaultAccountService;
 import com.example.spring_homework4.service.DefaultCustomerService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -8,6 +8,7 @@ import com.example.spring_homework4.service.DefaultAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAccountById(@PathVariable Long id) {
         accountService.deleteById(id);
     }
