@@ -4,6 +4,10 @@ import com.example.spring_homework4.dao.EmployerJpaRepository;
 import com.example.spring_homework4.domain.Employer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DefaultEmployerService implements EmployerService {
     private final EmployerJpaRepository employerJpaRepository;
+
     @Override
     public Employer save(Employer employer) {
         return employerJpaRepository.save(employer);

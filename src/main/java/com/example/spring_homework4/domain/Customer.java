@@ -30,7 +30,7 @@ public class Customer extends AbstractEntity {
     private String phoneNumber;
     @JsonManagedReference
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "employers_customers",
             joinColumns = @JoinColumn(name = "customer_id"),
@@ -43,8 +43,6 @@ public class Customer extends AbstractEntity {
         this.age = age;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.accounts = new ArrayList<>();
-        this.employers = new ArrayList<>();
     }
 
     @Override

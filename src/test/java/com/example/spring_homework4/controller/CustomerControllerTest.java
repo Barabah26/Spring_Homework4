@@ -53,7 +53,7 @@ class CustomerControllerTest {
         when(customerService.findAll(0, Integer.MAX_VALUE, PageRequest.of(0, 10))).thenReturn(page);
 
         // Perform the GET request to "/customers"
-        mockMvc.perform(MockMvcRequestBuilders.get("/customers").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.get("/customers/all").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("John Doe")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].email", Matchers.is("john.doe@example.com")))
@@ -71,7 +71,7 @@ class CustomerControllerTest {
 
         when(customerService.save(any(Customer.class))).thenReturn(new Customer());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/customers")
+        mockMvc.perform(MockMvcRequestBuilders.post("/customers/all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 // Add more assertions here if needed

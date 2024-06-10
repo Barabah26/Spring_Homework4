@@ -51,7 +51,7 @@ public class CustomerController {
 
     @Operation(summary = "Get all customers")
     @JsonView(CustomerView.Summary.class)
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<?> getAllCustomers(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {

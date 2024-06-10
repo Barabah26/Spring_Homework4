@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -47,8 +49,9 @@ public class DefaultCustomerService implements CustomerService {
 
     @Override
     public Page<Customer> findAll(Integer from, Integer to, Pageable pageable) {
-        return customerJpaRepository.findAllInRange(from, to, pageable);
+        return customerJpaRepository.findAll(pageable);
     }
+
 
     @Override
     public void deleteById(Long id) {
@@ -63,7 +66,7 @@ public class DefaultCustomerService implements CustomerService {
 
     @Override
     public void createAccountForCustomer(Long id, Currency currency, Double amount) {
-        Customer customer = customerJpaRepository.getOne(id);
+        Customer customer = customerJpaRepository.findById(id).get();
 
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found with id: " + id);
@@ -92,8 +95,7 @@ public class DefaultCustomerService implements CustomerService {
             for (Account account : accounts) {
                 accountJpaRepository.deleteById(account.getId());
             }
-            accounts.clear();
-//            accountJpaRepository.updateBalanceByNumber(customer, );
+            accounts = new ArrayList<>();
         } else {
             throw new IllegalArgumentException("Accounts are absent");
         }
@@ -109,34 +111,38 @@ public class DefaultCustomerService implements CustomerService {
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Account with number " + accountNumber + " not found"));
 
-            // Видаляємо акаунт з акаунтів клієнта
-            boolean removed = customer.getAccounts().removeIf(account -> account.getNumber().equals(accountNumber));
-            if (removed) {
-                accountJpaRepository.delete(accountToDelete);
-            }
+            List<Account> updatedAccounts = customer.getAccounts().stream()
+                    .filter(account -> !account.getNumber().equals(accountNumber))
+                    .collect(Collectors.toList());
+
+            customer.setAccounts(updatedAccounts);
+
+            accountJpaRepository.delete(accountToDelete);
         } else {
             throw new IllegalArgumentException("Customer not found with id: " + customerId);
         }
     }
 
+
     @Override
     public Customer update(Long id, Customer updatedCustomer) {
-        Customer currentCustomer = customerJpaRepository.getOne(id);
-        if (currentCustomer == null) {
+        Optional<Customer> optionalCustomer = customerJpaRepository.findById(id);
+        if (optionalCustomer.isPresent()) {
+            Customer currentCustomer = optionalCustomer.get();
+            currentCustomer.setName(updatedCustomer.getName());
+            currentCustomer.setEmail(updatedCustomer.getEmail());
+            currentCustomer.setAge(updatedCustomer.getAge());
+
+            for (Account account : currentCustomer.getAccounts()) {
+                account.setCustomer(currentCustomer);
+                accountJpaRepository.save(account);
+            }
+
+            customerJpaRepository.updateCustomerById(id, updatedCustomer.getName(), updatedCustomer.getEmail(), updatedCustomer.getAge());
+            return updatedCustomer;
+        } else {
             throw new IllegalArgumentException("Customer with id " + id + " not found");
         }
-
-        currentCustomer.setName(updatedCustomer.getName());
-        currentCustomer.setEmail(updatedCustomer.getEmail());
-        currentCustomer.setAge(updatedCustomer.getAge());
-
-        for (Account account : currentCustomer.getAccounts()) {
-            account.setCustomer(currentCustomer);
-            accountJpaRepository.save(account);
-        }
-
-        customerJpaRepository.updateCustomerById(id, updatedCustomer.getName(), updatedCustomer.getEmail(), updatedCustomer.getAge());
-        return updatedCustomer;
     }
 
     @Override
