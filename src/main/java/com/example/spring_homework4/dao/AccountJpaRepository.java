@@ -16,4 +16,5 @@ public interface AccountJpaRepository extends JpaRepository<Account, Long> {
     @Transactional
     @Query("UPDATE Account a SET a.balance = :balance WHERE a.number = :number")
     void updateBalanceByNumber(@Param("number") UUID number, @Param("balance") Double balance);
+
 }

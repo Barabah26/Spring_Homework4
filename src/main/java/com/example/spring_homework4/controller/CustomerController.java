@@ -5,7 +5,6 @@ import com.example.spring_homework4.domain.Customer;
 import com.example.spring_homework4.dto.account.AccountDtoRequest;
 import com.example.spring_homework4.dto.customer.CustomerDtoRequest;
 import com.example.spring_homework4.dto.customer.CustomerDtoResponse;
-import com.example.spring_homework4.dto.customer.CustomerView;
 import com.example.spring_homework4.mapper.account.AccountDtoMapperRequest;
 import com.example.spring_homework4.mapper.customer.CustomerDtoMapperRequest;
 import com.example.spring_homework4.mapper.customer.CustomerDtoMapperResponse;
@@ -13,9 +12,11 @@ import com.example.spring_homework4.service.DefaultAccountService;
 import com.example.spring_homework4.service.DefaultCustomerService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -37,20 +38,23 @@ public class CustomerController {
     private final CustomerDtoMapperRequest customerDtoMapperRequest;
     private final AccountDtoMapperRequest accountDtoMapperRequest;
 
+
     @Operation(summary = "Get customer by id")
     @GetMapping("/{id}")
     public ResponseEntity<?> getCustomer(@PathVariable Long id) {
         try {
             customerService.assignAccountsToCustomers();
-            return ResponseEntity.ok(customerDtoMapperRequest.convertToDto(customerService.getOne(id).get()));
+            Customer customer = customerService.getOne(id).orElseThrow(() -> new RuntimeException("Customer not found with ID " + id));
+            CustomerDtoResponse customerDtoResponse = customerDtoMapperResponse.convertToDto(customer);
+            return ResponseEntity.ok(customerDtoResponse);
         } catch (Exception e) {
             log.error("Customer not found with ID " + id, e);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer with ID " + id + " not found");
         }
     }
 
+
     @Operation(summary = "Get all customers")
-    @JsonView(CustomerView.Summary.class)
     @GetMapping("/all")
     public ResponseEntity<?> getAllCustomers(
             @RequestParam(defaultValue = "0") Integer page,

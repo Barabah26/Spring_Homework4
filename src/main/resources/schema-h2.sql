@@ -45,4 +45,19 @@ CREATE TABLE employers_customers (
                                      FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
+CREATE TABLE users (
+                       user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       user_name VARCHAR(36) NOT NULL,
+                       encrypted_password VARCHAR(128) NOT NULL,
+                       enabled BOOLEAN NOT NULL
+);
+
+CREATE TABLE roles (
+                       role_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       role_name VARCHAR(30),
+                       user_id BIGINT,
+                       FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+
 

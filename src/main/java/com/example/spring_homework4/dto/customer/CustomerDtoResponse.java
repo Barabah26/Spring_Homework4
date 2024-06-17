@@ -16,30 +16,13 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CustomerDtoResponse {
-    @JsonView(CustomerView.Summary.class)
     private Long id;
-
-    @JsonView(CustomerView.Summary.class)
     private String name;
-
-    @JsonView(CustomerView.Detailed.class)
     private String email;
-
-    @JsonView(CustomerView.Detailed.class)
     private Integer age;
-
-    @JsonView(CustomerView.Summary.class)
     private Set<UUID> accountNumbers;
-
-    @JsonView(CustomerView.Detailed.class)
     private List<String> employerNames;
-
-    @JsonView(CustomerView.Detailed.class)
     private String phoneNumber;
-
-    @JsonView(CustomerView.Detailed.class)
     private LocalDateTime creationDate;
-
-    @JsonView(CustomerView.Detailed.class)
     private LocalDateTime lastModifiedDate;
 }

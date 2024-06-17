@@ -20,4 +20,6 @@ public interface CustomerJpaRepository extends JpaRepository<Customer, Long> {
                             @Param("name") String name,
                             @Param("email") String email,
                             @Param("age") Integer age);
+
+    Customer findByName(String username);
 }

@@ -44,3 +44,18 @@ CREATE TABLE EMPLOYERS_CUSTOMERS
     CONSTRAINT fk_customer_employer_customer FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE CASCADE,
     CONSTRAINT fk_customer_employer_employer FOREIGN KEY (employer_id) REFERENCES employers (id) ON DELETE CASCADE
 );
+
+CREATE TABLE users (
+                       user_id INT AUTO_INCREMENT PRIMARY KEY,
+                       user_name VARCHAR(36) NOT NULL,
+                       encrypted_password VARCHAR(128) NOT NULL,
+                       enabled BOOLEAN NOT NULL
+);
+
+CREATE TABLE roles (
+                       role_id INT AUTO_INCREMENT PRIMARY KEY,
+                       role_name VARCHAR(30),
+                       user_id INT,
+                       FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+

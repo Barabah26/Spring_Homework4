@@ -18,4 +18,5 @@ public class AccountDtoRequest {
     @NotNull(message = "Balance must be provided, it can be negative")
     @Digits(integer = 12, message = "Balance must be a valid monetary amount with up to 12 integer digits", fraction = 0)
     private double balance;
+
 }

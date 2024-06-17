@@ -6,9 +6,14 @@ import com.example.spring_homework4.mapper.employer.EmployerDtoMapperResponse;
 import com.example.spring_homework4.service.DefaultEmployerService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -16,7 +21,9 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(EmployerController.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class EmployerControllerTest {
 
     @Autowired
@@ -28,6 +35,7 @@ class EmployerControllerTest {
     @MockBean
     private EmployerDtoMapperResponse employerDtoMapperResponse;
     @Test
+    @WithMockUser(username = "testUser")
     void getAll() throws Exception {
         Employer employer = new Employer();
 

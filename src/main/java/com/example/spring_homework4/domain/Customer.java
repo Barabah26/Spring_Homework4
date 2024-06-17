@@ -45,6 +45,11 @@ public class Customer extends AbstractEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    public Customer(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
